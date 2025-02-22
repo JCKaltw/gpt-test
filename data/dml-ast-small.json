@@ -1,0 +1,211 @@
+{
+    "corporate_consultants": {
+        "ddl": {
+            "create": {
+                "columns": {
+                    "cons_type": {
+                        "original_col_name": "cons type",
+                        "computed_sql_type": "VARCHAR",
+                        "key_type": "FK",
+                        "next_serial_value": 5
+                    },
+                    "firm_name": {
+                        "original_col_name": "Firm Name",
+                        "computed_sql_type": "VARCHAR",
+                        "key_type": "PK"
+                    },
+                    "region": {
+                        "original_col_name": "Region",
+                        "computed_sql_type": "VARCHAR",
+                        "key_type": "FK"
+                    },
+                    "fid": {
+                        "original_col_name": "FID",
+                        "computed_sql_type": "VARCHAR",
+                        "key_type": "PK"
+                    },
+                    "address": {
+                        "original_col_name": "Address",
+                        "computed_sql_type": "TEXT",
+                        "key_type": null
+                    },
+                    "contact_person_first_name": {
+                        "original_col_name": "Contact Person - First Name",
+                        "computed_sql_type": "VARCHAR",
+                        "key_type": null
+                    },
+                    "contact_person_last_name": {
+                        "original_col_name": "Contact Person - Last Name",
+                        "computed_sql_type": "VARCHAR",
+                        "key_type": null
+                    },
+                    "phone_number": {
+                        "original_col_name": "Phone Number",
+                        "computed_sql_type": "TEXT",
+                        "key_type": null
+                    },
+                    "email_address": {
+                        "original_col_name": "Email Address",
+                        "computed_sql_type": "TEXT",
+                        "key_type": null
+                    }
+                },
+                "primary_key": [
+                    "firm_name",
+                    "fid"
+                ],
+                "foreign_keys": {
+                    "cons_type": {
+                        "ref_table": "consultant_type",
+                        "ref_column": "cons_type"
+                    },
+                    "region": {
+                        "ref_table": "regions",
+                        "ref_column": "region"
+                    }
+                }
+            },
+            "errors": [],
+            "column_order": [
+                "cons_type",
+                "firm_name",
+                "region",
+                "fid",
+                "address",
+                "contact_person_first_name",
+                "contact_person_last_name",
+                "phone_number",
+                "email_address"
+            ]
+        },
+        "data": [
+            [
+                "Legal - Corporate",
+                "DLA Piper",
+                "Worldwide",
+                "DLAP",
+                null,
+                "Jay",
+                "Finkelstein",
+                null,
+                null
+            ],
+            [
+                "Legal - Intellectual Properties",
+                "DLA Piper 2",
+                "Worldwide",
+                "DLAP2",
+                null,
+                "Michael",
+                "Geller",
+                null,
+                null
+            ],
+            [
+                "Legal - Corporate",
+                "Bodman",
+                "United States",
+                "BOD",
+                null,
+                "Courtland",
+                "Anderson",
+                null,
+                null
+            ],
+            [
+                "Accounting",
+                "Finkelstein",
+                "United States",
+                "FINK",
+                null,
+                "Edward",
+                "Malinowski",
+                null,
+                null
+            ]
+        ]
+    },
+    "consultant_type": {
+        "ddl": {
+            "create": {
+                "columns": {
+                    "cons_type": {
+                        "original_col_name": "cons type",
+                        "computed_sql_type": "VARCHAR",
+                        "key_type": "PK"
+                    },
+                    "desc": {
+                        "original_col_name": "desc",
+                        "computed_sql_type": "VARCHAR",
+                        "key_type": null
+                    }
+                },
+                "primary_key": [
+                    "cons_type"
+                ],
+                "foreign_keys": {}
+            },
+            "errors": [],
+            "column_order": [
+                "cons_type",
+                "desc"
+            ]
+        },
+        "data": [
+            [
+                "Legal - Corporate",
+                "Corporate Lawyers and assistance"
+            ],
+            [
+                "Legal - Intellectual Properties",
+                "Patents, etc\u2026"
+            ],
+            [
+                "Accounting",
+                "CPAs"
+            ]
+        ]
+    },
+    "regions": {
+        "ddl": {
+            "create": {
+                "columns": {
+                    "region": {
+                        "original_col_name": "region",
+                        "computed_sql_type": "VARCHAR",
+                        "key_type": "PK"
+                    },
+                    "parent": {
+                        "original_col_name": "parent",
+                        "computed_sql_type": "VARCHAR",
+                        "key_type": "FK:region"
+                    }
+                },
+                "primary_key": [
+                    "region"
+                ],
+                "foreign_keys": {
+                    "parent": {
+                        "ref_table": "regions",
+                        "ref_column": "region"
+                    }
+                }
+            },
+            "errors": [],
+            "column_order": [
+                "region",
+                "parent"
+            ]
+        },
+        "data": [
+            [
+                "Worldwide",
+                null
+            ],
+            [
+                "United States",
+                "Worldwide"
+            ]
+        ]
+    }
+}

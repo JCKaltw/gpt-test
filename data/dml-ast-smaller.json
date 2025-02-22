@@ -1,0 +1,166 @@
+{
+    "corporate_consultants": {
+        "ddl": {
+            "create": {
+                "columns": {
+                    "fid": {
+                        "original_col_name": "FID",
+                        "computed_sql_type": "VARCHAR",
+                        "key_type": "PK"
+                    },
+                    "firm_name": {
+                        "original_col_name": "Firm Name",
+                        "computed_sql_type": "VARCHAR",
+                        "key_type": "PK"
+                    },
+                    "region": {
+                        "original_col_name": "Region",
+                        "computed_sql_type": "VARCHAR",
+                        "key_type": "FK"
+                    },
+                    "contact_person_first_name": {
+                        "original_col_name": "Contact Person - First Name",
+                        "computed_sql_type": "VARCHAR",
+                        "key_type": null
+                    },
+                    "contact_person_last_name": {
+                        "original_col_name": "Contact Person - Last Name",
+                        "computed_sql_type": "VARCHAR",
+                        "key_type": null
+                    }
+                },
+                "primary_key": [
+                    "fid",
+                    "firm_name"
+                ],
+                "foreign_keys": {
+                    "region": {
+                        "ref_table": "regions",
+                        "ref_column": "region"
+                    }
+                }
+            },
+            "errors": [],
+            "column_order": [
+                "fid",
+                "firm_name",
+                "region",
+                "contact_person_first_name",
+                "contact_person_last_name"
+            ]
+        },
+        "data": [
+            [
+                "DLAP",
+                "DLA Piper",
+                "Worldwide",
+                "Jay",
+                "Finkelstein"
+            ],
+            [
+                "DLAP2",
+                "DLA Piper 2",
+                "Worldwide",
+                "Michael",
+                "Geller"
+            ],
+            [
+                "BOD",
+                "Bodman",
+                "United States",
+                "Courtland",
+                "Anderson"
+            ],
+            [
+                "FINK",
+                "Finkelstein",
+                "United States",
+                "Edward",
+                "Malinowski"
+            ]
+        ]
+    },
+    "consultant_type": {
+        "ddl": {
+            "create": {
+                "columns": {
+                    "cons_type": {
+                        "original_col_name": "cons type",
+                        "computed_sql_type": "VARCHAR",
+                        "key_type": "PK"
+                    },
+                    "desc": {
+                        "original_col_name": "desc",
+                        "computed_sql_type": "VARCHAR",
+                        "key_type": null
+                    }
+                },
+                "primary_key": [
+                    "cons_type"
+                ],
+                "foreign_keys": {}
+            },
+            "errors": [],
+            "column_order": [
+                "cons_type",
+                "desc"
+            ]
+        },
+        "data": [
+            [
+                "Legal - Corporate",
+                "Corporate Lawyers and assistance"
+            ],
+            [
+                "Legal - Intellectual Properties",
+                "Patents, etc\u2026"
+            ],
+            [
+                "Accounting",
+                "CPAs"
+            ]
+        ]
+    },
+    "regions": {
+        "ddl": {
+            "create": {
+                "columns": {
+                    "region": {
+                        "original_col_name": "region",
+                        "computed_sql_type": "VARCHAR",
+                        "key_type": "PK"
+                    },
+                    "parent": {
+                        "original_col_name": "parent",
+                        "computed_sql_type": "VARCHAR",
+                        "key_type": "FK:region"
+                    }
+                },
+                "primary_key": [
+                    "region"
+                ],
+                "foreign_keys": {
+                    "parent": {
+                        "ref_table": "regions",
+                        "ref_column": "region"
+                    }
+                }
+            },
+            "errors": [],
+            "column_order": [
+                "region",
+                "parent"
+            ]
+        },
+        "data": [
+            [
+                "Worldwide",
+                null
+            ],
+            [
+                "United States",
+                "Worldwide"
+            ]
+        ]
+    }
+}
