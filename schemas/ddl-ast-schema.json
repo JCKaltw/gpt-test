@@ -11,7 +11,7 @@
     },
     "additionalProperties": false,
     "definitions": {
-        "table" : {
+        "table": {
             "type": "object",
             "properties": {
                 "create": {
@@ -31,8 +31,17 @@
                                         },
                                         "key_type": {
                                             "type": ["string", "null"],
-                                            "enum": ["PK", "FK", null],
-                                            "description": "Type of the key. Valid values are 'PK' (primary key), 'FK' (foreign key), or null (not a key or indexed column)."
+                                            "anyOf": [
+                                                {
+                                                    "enum": ["PK", "FK", null],
+                                                    "description": "Type of the key. Valid values are 'PK' (primary key), 'FK' (foreign key), or null (not a key or indexed column)."
+                                                },
+                                                {
+                                                    "type": "string",
+                                                    "pattern": "^(Enum:|FK:).*$",
+                                                    "description": "Custom enum type starting with 'Enum:' or foreign key type starting with 'FK:' followed by additional details."
+                                                }
+                                            ]
                                         }
                                     },
                                     "required": ["original_col_name", "computed_sql_type", "key_type"],
