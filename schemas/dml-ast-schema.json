@@ -1,0 +1,57 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "https://pgpro.plasmaguardllc.com/dml-ast-schema.json",
+    "title": "DML AST Schema",
+    "type": "object",
+    "description": "Root object contains table names as keys. Each key maps to a table object containing 'ddl' and 'data' objects. The 'ddl' object conforms to the DDL AST schema. The 'data' object is an array of data rows. Each row is an array where values correspond to the columns defined in 'ddl'.",
+    "patternProperties": {
+        "^.*$": {
+            "type": "object",
+            "description": "Object containing the DDL and records for a table.",
+            "properties": {
+                "ddl": {
+                    { "$ref": "https://pgpro.plasmaguardllc.com/ddl-ast-schema.json/#definitions/table" }
+                },
+                "data": {
+                    "type": "array",
+                    "description": "Array of records for the table. Each record is an array of column values, corresponding to the column order defined in the 'ddl'.",
+                    "items": {
+                        "type": "array",
+                        "description": "A record in the table, with column values as array items.",
+                        "items": {
+                            "description": "A column value. Can be any JSON data type.",
+                            "oneOf": [
+                                { "type": "string" },
+                                { "type": "number" },
+                                { "type": "boolean" },
+                                { "type": "null" },
+                                {
+                                    "type": "array",
+                                    "items": {
+                                        "oneOf": [
+                                            { "type": "string" },
+                                            { "type": "number" },
+                                            { "type": "boolean" },
+                                            { "type": "null" }
+                                        ]
+                                    }
+                                },
+                                { "type": "object" }
+                            ],
+                            "example": ["Jay", "Finkelstein", null, null]
+                        }
+                    },
+                    "example": [
+                        ["Jay", "Finkelstein", null, null],
+                        ["Michael", "Geller", null, null],
+                        ["Courtland", "Anderson", null, null],
+                        ["Edward", "Malinowski", null, null]
+                    ]
+                }
+            },
+            "required": ["ddl", "data"],
+            "additionalProperties": false
+        }
+    },
+    "additionalProperties": false
+}

@@ -1,0 +1,466 @@
+I have a python project where I wish to validate JSON files against a JSON schema file.  I have it working for cases where the JSON schema stands by itself, however I need it to also work when the JSON schema file contains references to other JSON schema files.
+
+Here is a directory listing of the files involved:
+
+% ls -l schemas data bin src
+bin:
+total 16
+-rwxr-xr-x  1 chris  staff  285 Feb 22 10:21 test-validate-ddl-ast.sh
+-rwxr-xr-x  1 chris  staff  285 Feb 22 11:24 test-validate-dml-ast.sh
+
+data:
+total 80
+-rw-r--r--  1 chris  staff  30335 Feb 20 19:58 ddl-ast.json
+-rw-r--r--  1 chris  staff   4815 Feb 22 11:22 dml-ast.json
+
+schemas:
+total 24
+-rw-r--r--  1 chris  staff  6239 Feb 22 11:16 ddl-ast-schema.json
+-rw-r--r--  1 chris  staff  2835 Feb 22 11:20 dml-ast-schema.json
+
+src:
+total 8
+-rw-r--r--  1 chris  staff  2176 Feb 20 20:03 validate-json.py
+chris@Js-MacBook-Air ~/projects/gpt-test % 
+
+Here is my test scripts content:
+ % catall bin/*sh
+=====================================
+! FILE: bin/test-validate-ddl-ast.sh
+=====================================
+#!/bin/sh
+. ./source-venv.sh
+
+echo "python src/validate-json.py --verbose \ "
+echo "    --json-schema-file schemas/ddl-ast-schema.json \ "
+echo "    data/ddl-ast.json "
+
+python src/validate-json.py --verbose \
+    --json-schema-file schemas/ddl-ast-schema.json \
+    data/ddl-ast.json
+=====================================
+! FILE: bin/test-validate-dml-ast.sh
+=====================================
+#!/bin/sh
+. ./source-venv.sh
+
+echo "python src/validate-json.py --verbose \ "
+echo "    --json-schema-file schemas/dml-ast-schema.json \ "
+echo "    data/dml-ast.json "
+
+python src/validate-json.py --verbose \
+    --json-schema-file schemas/dml-ast-schema.json \
+    data/dml-ast.json
+
+The test script above: `bin/test-validate-ddl-ast.sh` works.
+This one successfully validates against a single JSON schema file.
+
+The second test script: `bin/test-validate-dml-ast.sh` uses schemas/dml-ast-schema.json  which contains references to schemas/ddl-ast-schema.json.
+
+The two JSON schema files are shown here:
+
+-----
+=====================================
+! FILE: schemas/ddl-ast-schema.json
+=====================================
+{
+    "$id": "https://pgpro.plasmaguardllc.com/ddl-ast-schema.json",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "DDL AST Schema",
+    "type": "object",
+    "description": "Root object contains table names as keys. Each key maps to a table object containing 'create', 'errors' and 'column_order' objects. 'column_order' maps column names to their respective index in the data rows arrays.",
+    "patternProperties": {
+        "^.*$": {
+            "$ref": "#/definitions/table"
+        }
+    },
+    "additionalProperties": false,
+    "definitions": {
+        "table": {
+            "type": "object",
+            "properties": {
+                "create": {
+                    "type": "object",
+                    "properties": {
+                        "columns": {
+                            "type": "object",
+                            "description": "Contains column names as keys. Each key maps to a column object containing details like 'original_col_name', 'computed_sql_type' and 'key_type'.",
+                            "patternProperties": {
+                                "^.*$": {
+                                    "type": "object",
+                                    "properties": {
+                                        "original_col_name": { "type": "string" },
+                                        "computed_sql_type": {
+                                            "type": "string",
+                                            "enum": ["TEXT", "VARCHAR", "INTEGER", "REAL", "BOOLEAN", "DATE", "TIMESTAMP", "SERIAL", "BIGSERIAL", "BYTEA", "POINT", "LINE", "LSEG", "BOX", "PATH", "POLYGON", "CIRCLE", "CIDR", "INET", "MACADDR", "BIT", "VARBIT", "UUID", "XML", "JSON", "ARRAY", "HSTORE", "TSVECTOR", "TSQUERY", "GEOGRAPHY", "GEOMETRY"]
+                                        },
+                                        "key_type": {
+                                            "type": ["string", "null"],
+                                            "anyOf": [
+                                                {
+                                                    "enum": ["PK", "FK", null],
+                                                    "description": "Type of the key. Valid values are 'PK' (primary key), 'FK' (foreign key), or null (not a key or indexed column)."
+                                                },
+                                                {
+                                                    "type": "string",
+                                                    "pattern": "^(Enum:|FK:).*$",
+                                                    "description": "Custom enum type starting with 'Enum:' or foreign key type starting with 'FK:' followed by additional details."
+                                                }
+                                            ]
+                                        }
+                                    },
+                                    "required": ["original_col_name", "computed_sql_type", "key_type"],
+                                    "examples": [
+                                        {
+                                            "original_col_name": "Contact Person - First Name",
+                                            "computed_sql_type": "VARCHAR",
+                                            "key_type": null
+                                        }
+                                    ]
+                                }
+                            },
+                            "additionalProperties": false
+                        },
+                        "primary_key": {
+                            "type": "array",
+                            "items": { "type": "string" },
+                            "description": "Array of column names each is a distinct primary key of the table. Compound primary keys not currently supported. Unique indexes if more than one primary key.",
+                            "example": ["firm_name"]
+                        },
+                        "foreign_keys": {
+                            "type": "object",
+                            "description": "Object where keys are column names and values are foreign key objects. Each object contains the 'ref_table' it refers to and the 'ref_column' in that table.",
+                            "patternProperties": {
+                                "^.*$": {
+                                    "type": "object",
+                                    "properties": {
+                                        "ref_table": { "type": ["string", "null"] },
+                                        "ref_column": { "type": "string" }
+                                    },
+                                    "required": ["ref_table", "ref_column"],
+                                    "description": "Foreign key object. Contains the 'ref_table' it refers to and the 'ref_column' in that table.",
+                                    "example": {
+                                        "ref_table": "regions",
+                                        "ref_column": "region"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "required": ["columns", "primary_key", "foreign_keys"]
+                },
+                "errors": {
+                    "type": "array",
+                    "items": { "type": "string" },
+                    "description": "Array of error messages. Empty if there are no errors."
+                },
+                "column_order": {
+                    "type": "array",
+                    "description": "Array unique column names, in the order they appear in the input. The index of a column name in this array corresponds to the index of the column's value in each data array in the DDL. It also determines the order used for columns within create table SQL DDL.",
+                    "items": { "type": "string" },
+                    "example": ["contact_person_first_name", "contact_person_last_name", "phone_number", "email_address"]
+                }
+            },
+            "required": ["create", "errors", "column_order"]
+        }
+    }
+}
+=====================================
+! FILE: schemas/dml-ast-schema.json
+=====================================
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "https://pgpro.plasmaguardllc.com/dml-ast-schema.json",
+    "title": "DML AST Schema",
+    "type": "object",
+    "description": "Root object contains table names as keys. Each key maps to a table object containing 'ddl' and 'data' objects. The 'ddl' object conforms to the DDL AST schema. The 'data' object is an array of data rows. Each row is an array where values correspond to the columns defined in 'ddl'.",
+    "patternProperties": {
+        "^.*$": {
+            "type": "object",
+            "description": "Object containing the DDL and records for a table.",
+            "properties": {
+                "ddl": {
+                    { "$ref": "https://pgpro.plasmaguardllc.com/ddl-ast-schema.json/#definitions/table" }
+                },
+                "data": {
+                    "type": "array",
+                    "description": "Array of records for the table. Each record is an array of column values, corresponding to the column order defined in the 'ddl'.",
+                    "items": {
+                        "type": "array",
+                        "description": "A record in the table, with column values as array items.",
+                        "items": {
+                            "description": "A column value. Can be any JSON data type.",
+                            "oneOf": [
+                                { "type": "string" },
+                                { "type": "number" },
+                                { "type": "boolean" },
+                                { "type": "null" },
+                                {
+                                    "type": "array",
+                                    "items": {
+                                        "oneOf": [
+                                            { "type": "string" },
+                                            { "type": "number" },
+                                            { "type": "boolean" },
+                                            { "type": "null" }
+                                        ]
+                                    }
+                                },
+                                { "type": "object" }
+                            ],
+                            "example": ["Jay", "Finkelstein", null, null]
+                        }
+                    },
+                    "example": [
+                        ["Jay", "Finkelstein", null, null],
+                        ["Michael", "Geller", null, null],
+                        ["Courtland", "Anderson", null, null],
+                        ["Edward", "Malinowski", null, null]
+                    ]
+                }
+            },
+            "required": ["ddl", "data"],
+            "additionalProperties": false
+        }
+    },
+    "additionalProperties": false
+}
+
+
+Here is the python code:
+
+# src/validate-json.py
+import argparse
+import json
+import sys
+
+import jsonschema  # third-party library for JSON Schema validation
+from jsonschema import exceptions as jsonschema_exceptions
+
+def main():
+    # Parse command-line arguments
+    parser = argparse.ArgumentParser(description="Validate a JSON file against a JSON schema.")
+    parser.add_argument("--json-schema-file", dest="json_schema_file", required=True,
+                        help="Path to the JSON schema file")
+    parser.add_argument("json_file", help="Path to the JSON data file to validate")
+    parser.add_argument("--verbose", "-v", action="store_true",
+                        help="Display detailed error messages if validation fails")
+    args = parser.parse_args()
+
+    # Load and parse the JSON schema file
+    try:
+        with open(args.json_schema_file, "r") as schema_f:
+            schema = json.load(schema_f)
+    except Exception as e:
+        # Could be FileNotFoundError or JSONDecodeError (invalid JSON)
+        print("ERROR")
+        if args.verbose:
+            print(f"Failed to load JSON schema: {e}")
+        sys.exit(1)
+
+    # Load and parse the JSON data file
+    try:
+        with open(args.json_file, "r") as json_f:
+            data = json.load(json_f)
+    except Exception as e:
+        # Handle file not found or invalid JSON in the data file
+        print("ERROR")
+        if args.verbose:
+            print(f"Failed to load JSON file: {e}")
+        sys.exit(1)
+
+    # Validate the JSON data against the schema
+    try:
+        jsonschema.validate(instance=data, schema=schema)
+    except jsonschema_exceptions.ValidationError as e:
+        # JSON data is invalid under the schema
+        print("ERROR")
+        if args.verbose:
+            print(f"Validation failed: {e.message}")
+        sys.exit(1)
+    except jsonschema_exceptions.SchemaError as e:
+        # The schema itself is invalid
+        print("ERROR")
+        if args.verbose:
+            print(f"Invalid schema: {e.message}")
+        sys.exit(1)
+
+    # If validation succeeds (no exception was raised)
+    print("OK")
+    sys.exit(0)
+
+
+# Entry point for script execution
+if __name__ == "__main__":
+    main()
+
+
+Here is an example JSON I must validate (it is the contents of the file (data/dml-ast.json) referenced in the test script:
+
+{
+    "corporate_consultants": {
+        "ddl": {
+            "create": {
+                "columns": {
+                    "fid": {
+                        "original_col_name": "FID",
+                        "computed_sql_type": "VARCHAR",
+                        "key_type": "PK"
+                    },
+                    "firm_name": {
+                        "original_col_name": "Firm Name",
+                        "computed_sql_type": "VARCHAR",
+                        "key_type": "PK"
+                    },
+                    "region": {
+                        "original_col_name": "Region",
+                        "computed_sql_type": "VARCHAR",
+                        "key_type": "FK"
+                    },
+                    "contact_person_first_name": {
+                        "original_col_name": "Contact Person - First Name",
+                        "computed_sql_type": "VARCHAR",
+                        "key_type": null
+                    },
+                    "contact_person_last_name": {
+                        "original_col_name": "Contact Person - Last Name",
+                        "computed_sql_type": "VARCHAR",
+                        "key_type": null
+                    }
+                },
+                "primary_key": [
+                    "fid",
+                    "firm_name"
+                ],
+                "foreign_keys": {
+                    "region": {
+                        "ref_table": "regions",
+                        "ref_column": "region"
+                    }
+                }
+            },
+            "errors": [],
+            "column_order": [
+                "fid",
+                "firm_name",
+                "region",
+                "contact_person_first_name",
+                "contact_person_last_name"
+            ]
+        },
+        "data": [
+            [
+                "DLAP",
+                "DLA Piper",
+                "Worldwide",
+                "Jay",
+                "Finkelstein"
+            ],
+            [
+                "DLAP2",
+                "DLA Piper 2",
+                "Worldwide",
+                "Michael",
+                "Geller"
+            ],
+            [
+                "BOD",
+                "Bodman",
+                "United States",
+                "Courtland",
+                "Anderson"
+            ],
+            [
+                "FINK",
+                "Finkelstein",
+                "United States",
+                "Edward",
+                "Malinowski"
+            ]
+        ]
+    },
+    "consultant_type": {
+        "ddl": {
+            "create": {
+                "columns": {
+                    "cons_type": {
+                        "original_col_name": "cons type",
+                        "computed_sql_type": "VARCHAR",
+                        "key_type": "PK"
+                    },
+                    "desc": {
+                        "original_col_name": "desc",
+                        "computed_sql_type": "VARCHAR",
+                        "key_type": null
+                    }
+                },
+                "primary_key": [
+                    "cons_type"
+                ],
+                "foreign_keys": {}
+            },
+            "errors": [],
+            "column_order": [
+                "cons_type",
+                "desc"
+            ]
+        },
+        "data": [
+            [
+                "Legal - Corporate",
+                "Corporate Lawyers and assistance"
+            ],
+            [
+                "Legal - Intellectual Properties",
+                "Patents, etc\u2026"
+            ],
+            [
+                "Accounting",
+                "CPAs"
+            ]
+        ]
+    },
+    "regions": {
+        "ddl": {
+            "create": {
+                "columns": {
+                    "region": {
+                        "original_col_name": "region",
+                        "computed_sql_type": "VARCHAR",
+                        "key_type": "PK"
+                    },
+                    "parent": {
+                        "original_col_name": "parent",
+                        "computed_sql_type": "VARCHAR",
+                        "key_type": "FK:region"
+                    }
+                },
+                "primary_key": [
+                    "region"
+                ],
+                "foreign_keys": {
+                    "parent": {
+                        "ref_table": "regions",
+                        "ref_column": "region"
+                    }
+                }
+            },
+            "errors": [],
+            "column_order": [
+                "region",
+                "parent"
+            ]
+        },
+        "data": [
+            [
+                "Worldwide",
+                null
+            ],
+            [
+                "United States",
+                "Worldwide"
+            ]
+        ]
+    }
+}
+
