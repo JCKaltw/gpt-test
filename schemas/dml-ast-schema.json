@@ -9,7 +9,9 @@
             "type": "object",
             "description": "Object containing the DDL and records for a table.",
             "properties": {
-                "ddl": { "$ref": "https://pgpro.plasmaguardllc.com/ddl-ast-schema.json/#definitions/table" },
+                "ddl": {
+                    "$ref": "https://pgpro.plasmaguardllc.com/ddl-ast-schema.json#/definitions/table"
+                },
                 "data": {
                     "type": "array",
                     "description": "Array of records for the table. Each record is an array of column values, corresponding to the column order defined in the 'ddl'.",

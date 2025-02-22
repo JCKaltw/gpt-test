@@ -37,26 +37,23 @@ def main():
             print(f"Failed to load JSON file: {e}")
         sys.exit(1)
 
-    # If your schema (e.g., dml-ast-schema.json) contains external references,
-    # you can load the referenced schemas into a "store" mapping.
-    # For example, if dml-ast-schema.json references ddl-ast-schema.json via:
-    #   "$ref": "https://pgpro.plasmaguardllc.com/ddl-ast-schema.json/#definitions/table"
-    # then load ddl-ast-schema.json and map its $id to its contents.
+    # Create a store to map URIs to schema content
     store = {}
-    # Check if our schema has external references that need to be resolved.
-    # Here we assume that if you’re validating the DML schema, you'll need the DDL schema.
-    # Adjust the path as needed.
+
+    # Load the referenced schema (ddl-ast-schema.json) and add it to the store
     ddl_schema_path = os.path.join(os.path.dirname(args.json_schema_file), "ddl-ast-schema.json")
     try:
         with open(ddl_schema_path, "r") as ddl_f:
             ddl_schema = json.load(ddl_f)
-            # Map the remote URI to the loaded ddl_schema
+            # Map the $id of the referenced schema to its content
             store["https://pgpro.plasmaguardllc.com/ddl-ast-schema.json"] = ddl_schema
-    except Exception:
-        # If the ddl schema is not needed or cannot be loaded, skip it.
-        pass
+    except Exception as e:
+        print("ERROR")
+        if args.verbose:
+            print(f"Failed to load referenced schema: {e}")
+        sys.exit(1)
 
-    # Create a resolver with the custom store.
+    # Create a resolver with the custom store
     resolver = RefResolver.from_schema(schema, store=store)
 
     # Validate using a Draft7Validator with the custom resolver
