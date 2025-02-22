@@ -1,0 +1,93 @@
+{
+    "$id": "https://pgpro.plasmaguardllc.com/ddl-ast-schema.json",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "DDL AST Schema",
+    "type": "object",
+    "description": "Root object contains table names as keys. Each key maps to a table object containing 'create', 'errors' and 'column_order' objects. 'column_order' maps column names to their respective index in the data rows arrays.",
+    "patternProperties": {
+        "^.*$": {
+            "$ref": "#/definitions/table"
+        }
+    },
+    "additionalProperties": false,
+    "definitions": {
+        "table" : {
+            "type": "object",
+            "properties": {
+                "create": {
+                    "type": "object",
+                    "properties": {
+                        "columns": {
+                            "type": "object",
+                            "description": "Contains column names as keys. Each key maps to a column object containing details like 'original_col_name', 'computed_sql_type' and 'key_type'.",
+                            "patternProperties": {
+                                "^.*$": {
+                                    "type": "object",
+                                    "properties": {
+                                        "original_col_name": { "type": "string" },
+                                        "computed_sql_type": {
+                                            "type": "string",
+                                            "enum": ["TEXT", "VARCHAR", "INTEGER", "REAL", "BOOLEAN", "DATE", "TIMESTAMP", "SERIAL", "BIGSERIAL", "BYTEA", "POINT", "LINE", "LSEG", "BOX", "PATH", "POLYGON", "CIRCLE", "CIDR", "INET", "MACADDR", "BIT", "VARBIT", "UUID", "XML", "JSON", "ARRAY", "HSTORE", "TSVECTOR", "TSQUERY", "GEOGRAPHY", "GEOMETRY"]
+                                        },
+                                        "key_type": {
+                                            "type": ["string", "null"],
+                                            "enum": ["PK", "FK", null],
+                                            "description": "Type of the key. Valid values are 'PK' (primary key), 'FK' (foreign key), or null (not a key or indexed column)."
+                                        }
+                                    },
+                                    "required": ["original_col_name", "computed_sql_type", "key_type"],
+                                    "examples": [
+                                        {
+                                            "original_col_name": "Contact Person - First Name",
+                                            "computed_sql_type": "VARCHAR",
+                                            "key_type": null
+                                        }
+                                    ]
+                                }
+                            },
+                            "additionalProperties": false
+                        },
+                        "primary_key": {
+                            "type": "array",
+                            "items": { "type": "string" },
+                            "description": "Array of column names each is a distinct primary key of the table. Compound primary keys not currently supported. Unique indexes if more than one primary key.",
+                            "example": ["firm_name"]
+                        },
+                        "foreign_keys": {
+                            "type": "object",
+                            "description": "Object where keys are column names and values are foreign key objects. Each object contains the 'ref_table' it refers to and the 'ref_column' in that table.",
+                            "patternProperties": {
+                                "^.*$": {
+                                    "type": "object",
+                                    "properties": {
+                                        "ref_table": { "type": ["string", "null"] },
+                                        "ref_column": { "type": "string" }
+                                    },
+                                    "required": ["ref_table", "ref_column"],
+                                    "description": "Foreign key object. Contains the 'ref_table' it refers to and the 'ref_column' in that table.",
+                                    "example": {
+                                        "ref_table": "regions",
+                                        "ref_column": "region"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "required": ["columns", "primary_key", "foreign_keys"]
+                },
+                "errors": {
+                    "type": "array",
+                    "items": { "type": "string" },
+                    "description": "Array of error messages. Empty if there are no errors."
+                },
+                "column_order": {
+                    "type": "array",
+                    "description": "Array unique column names, in the order they appear in the input. The index of a column name in this array corresponds to the index of the column's value in each data array in the DDL. It also determines the order used for columns within create table SQL DDL.",
+                    "items": { "type": "string" },
+                    "example": ["contact_person_first_name", "contact_person_last_name", "phone_number", "email_address"]
+                }
+            },
+            "required": ["create", "errors", "column_order"]
+        }
+    }
+}

@@ -1,0 +1,1160 @@
+{
+  "region_type": {
+    "create": {
+      "columns": {
+        "region_type": {
+          "original_col_name": "REGION TYPE",
+          "computed_sql_type": "VARCHAR",
+          "key_type": "PK"
+        }
+      },
+      "primary_key": [
+        "region_type"
+      ],
+      "foreign_keys": {}
+    },
+    "errors": [],
+    "column_order": [
+      "region_type"
+    ]
+  },
+  "region": {
+    "create": {
+      "columns": {
+        "region": {
+          "original_col_name": "REGION",
+          "computed_sql_type": "VARCHAR",
+          "key_type": "PK"
+        },
+        "parent": {
+          "original_col_name": "PARENT",
+          "computed_sql_type": "VARCHAR",
+          "key_type": "FK:region:nulls"
+        },
+        "region_type": {
+          "original_col_name": "REGION TYPE",
+          "computed_sql_type": "VARCHAR",
+          "key_type": "FK"
+        }
+      },
+      "primary_key": [
+        "region"
+      ],
+      "foreign_keys": {
+        "parent": {
+          "ref_table": "region",
+          "ref_column": "region",
+          "nullable": true
+        },
+        "region_type": {
+          "ref_table": "region_type",
+          "ref_column": "region_type",
+          "nullable": false
+        }
+      }
+    },
+    "errors": [],
+    "column_order": [
+      "region",
+      "parent",
+      "region_type"
+    ]
+  },
+  "entity_type": {
+    "create": {
+      "columns": {
+        "entity_type": {
+          "original_col_name": "Entity Type",
+          "computed_sql_type": "VARCHAR",
+          "key_type": "PK"
+        }
+      },
+      "primary_key": [
+        "entity_type"
+      ],
+      "foreign_keys": {}
+    },
+    "errors": [],
+    "column_order": [
+      "entity_type"
+    ]
+  },
+  "employee": {
+    "create": {
+      "columns": {
+        "employee_id": {
+          "original_col_name": "Employee_ID",
+          "computed_sql_type": "INTEGER",
+          "key_type": "PK"
+        },
+        "first_name": {
+          "original_col_name": "First Name",
+          "computed_sql_type": "VARCHAR",
+          "key_type": null
+        },
+        "last_name": {
+          "original_col_name": "Last Name",
+          "computed_sql_type": "VARCHAR",
+          "key_type": null
+        },
+        "title": {
+          "original_col_name": "Title",
+          "computed_sql_type": "VARCHAR",
+          "key_type": null
+        },
+        "region_assigned": {
+          "original_col_name": "Region Assigned",
+          "computed_sql_type": "VARCHAR",
+          "key_type": "FK:region"
+        },
+        "phone_number": {
+          "original_col_name": "Phone Number",
+          "computed_sql_type": "VARCHAR",
+          "key_type": null
+        },
+        "address": {
+          "original_col_name": "Address",
+          "computed_sql_type": "VARCHAR",
+          "key_type": null
+        },
+        "pg_email": {
+          "original_col_name": "PG Email",
+          "computed_sql_type": "VARCHAR",
+          "key_type": null
+        },
+        "hire_date": {
+          "original_col_name": "Hire Date",
+          "computed_sql_type": "VARCHAR",
+          "key_type": null
+        }
+      },
+      "primary_key": [
+        "employee_id"
+      ],
+      "foreign_keys": {
+        "region_assigned": {
+          "ref_table": "region",
+          "ref_column": "region",
+          "nullable": false
+        }
+      }
+    },
+    "errors": [],
+    "column_order": [
+      "employee_id",
+      "first_name",
+      "last_name",
+      "title",
+      "region_assigned",
+      "phone_number",
+      "address",
+      "pg_email",
+      "hire_date"
+    ]
+  },
+  "region_entity": {
+    "create": {
+      "columns": {
+        "entity_name": {
+          "original_col_name": "Entity Name",
+          "computed_sql_type": "VARCHAR",
+          "key_type": "PK"
+        },
+        "region": {
+          "original_col_name": "REGION",
+          "computed_sql_type": "VARCHAR",
+          "key_type": "FK"
+        },
+        "entity_level": {
+          "original_col_name": "Entity Level",
+          "computed_sql_type": "INTEGER",
+          "key_type": null
+        },
+        "entity_type": {
+          "original_col_name": "Entity Type",
+          "computed_sql_type": "VARCHAR",
+          "key_type": "FK"
+        },
+        "incorporated": {
+          "original_col_name": "Incorporated",
+          "computed_sql_type": "VARCHAR",
+          "key_type": null
+        },
+        "address": {
+          "original_col_name": "Address",
+          "computed_sql_type": "TEXT",
+          "key_type": null
+        },
+        "representing_law_firm": {
+          "original_col_name": "Representing Law Firm",
+          "computed_sql_type": "TEXT",
+          "key_type": null
+        },
+        "manager": {
+          "original_col_name": "Manager",
+          "computed_sql_type": "INTEGER",
+          "key_type": "FK:employee_id"
+        },
+        "list_of_board_members": {
+          "original_col_name": "List of Board Members",
+          "computed_sql_type": "TEXT",
+          "key_type": null
+        }
+      },
+      "primary_key": [
+        "entity_name"
+      ],
+      "foreign_keys": {
+        "region": {
+          "ref_table": "region",
+          "ref_column": "region",
+          "nullable": false
+        },
+        "entity_type": {
+          "ref_table": "entity_type",
+          "ref_column": "entity_type",
+          "nullable": false
+        },
+        "manager": {
+          "ref_table": "employee",
+          "ref_column": "employee_id",
+          "nullable": false
+        }
+      }
+    },
+    "errors": [],
+    "column_order": [
+      "entity_name",
+      "region",
+      "entity_level",
+      "entity_type",
+      "incorporated",
+      "address",
+      "representing_law_firm",
+      "manager",
+      "list_of_board_members"
+    ]
+  },
+  "company_type": {
+    "create": {
+      "columns": {
+        "company_type": {
+          "original_col_name": "company_type",
+          "computed_sql_type": "VARCHAR",
+          "key_type": "PK"
+        },
+        "description": {
+          "original_col_name": "description",
+          "computed_sql_type": "TEXT",
+          "key_type": null
+        }
+      },
+      "primary_key": [
+        "company_type"
+      ],
+      "foreign_keys": {}
+    },
+    "errors": [],
+    "column_order": [
+      "company_type",
+      "description"
+    ]
+  },
+  "corporation": {
+    "create": {
+      "columns": {
+        "company_name": {
+          "original_col_name": "Company Name",
+          "computed_sql_type": "VARCHAR",
+          "key_type": "PK"
+        },
+        "company_id": {
+          "original_col_name": "Company ID",
+          "computed_sql_type": "INTEGER",
+          "key_type": "PK"
+        },
+        "company_parent": {
+          "original_col_name": "Company Parent",
+          "computed_sql_type": "VARCHAR",
+          "key_type": "FK:company_name:nulls"
+        },
+        "company_type": {
+          "original_col_name": "Company Type",
+          "computed_sql_type": "VARCHAR",
+          "key_type": "FK"
+        },
+        "region": {
+          "original_col_name": "Region",
+          "computed_sql_type": "VARCHAR",
+          "key_type": "FK"
+        },
+        "company_address": {
+          "original_col_name": "Company Address",
+          "computed_sql_type": "TEXT",
+          "key_type": null
+        },
+        "city": {
+          "original_col_name": "City",
+          "computed_sql_type": "TEXT",
+          "key_type": null
+        },
+        "state": {
+          "original_col_name": "State",
+          "computed_sql_type": "TEXT",
+          "key_type": null
+        },
+        "county": {
+          "original_col_name": "County",
+          "computed_sql_type": "TEXT",
+          "key_type": null
+        },
+        "country": {
+          "original_col_name": "Country",
+          "computed_sql_type": "TEXT",
+          "key_type": null
+        },
+        "zip_code": {
+          "original_col_name": "Zip Code",
+          "computed_sql_type": "TEXT",
+          "key_type": null
+        },
+        "contact_person_first_name": {
+          "original_col_name": "Contact Person - First Name",
+          "computed_sql_type": "TEXT",
+          "key_type": null
+        },
+        "contact_person_last_name": {
+          "original_col_name": "Contact Person - Last Name",
+          "computed_sql_type": "TEXT",
+          "key_type": null
+        },
+        "phone_number": {
+          "original_col_name": "Phone Number",
+          "computed_sql_type": "TEXT",
+          "key_type": null
+        },
+        "email_address": {
+          "original_col_name": "Email Address",
+          "computed_sql_type": "TEXT",
+          "key_type": null
+        }
+      },
+      "primary_key": [
+        "company_name",
+        "company_id"
+      ],
+      "foreign_keys": {
+        "company_parent": {
+          "ref_table": "corporation",
+          "ref_column": "company_name",
+          "nullable": true
+        },
+        "company_type": {
+          "ref_table": "company_type",
+          "ref_column": "company_type",
+          "nullable": false
+        },
+        "region": {
+          "ref_table": "region",
+          "ref_column": "region",
+          "nullable": false
+        }
+      }
+    },
+    "errors": [],
+    "column_order": [
+      "company_name",
+      "company_id",
+      "company_parent",
+      "company_type",
+      "region",
+      "company_address",
+      "city",
+      "state",
+      "county",
+      "country",
+      "zip_code",
+      "contact_person_first_name",
+      "contact_person_last_name",
+      "phone_number",
+      "email_address"
+    ]
+  },
+  "product_type": {
+    "create": {
+      "columns": {
+        "product_type": {
+          "original_col_name": "Product Type",
+          "computed_sql_type": "VARCHAR",
+          "key_type": "PK"
+        },
+        "product_type_parent": {
+          "original_col_name": "Product Type Parent",
+          "computed_sql_type": "VARCHAR",
+          "key_type": "FK:product_type:nulls"
+        },
+        "product_id": {
+          "original_col_name": "Product_ID",
+          "computed_sql_type": "VARCHAR",
+          "key_type": "PK"
+        },
+        "model_number": {
+          "original_col_name": "Model Number",
+          "computed_sql_type": "VARCHAR",
+          "key_type": "PK"
+        },
+        "description": {
+          "original_col_name": "Description",
+          "computed_sql_type": "VARCHAR",
+          "key_type": null
+        },
+        "wholesale_price": {
+          "original_col_name": "Wholesale Price",
+          "computed_sql_type": "INTEGER",
+          "key_type": null
+        },
+        "msrp": {
+          "original_col_name": "MSRP ",
+          "computed_sql_type": "INTEGER",
+          "key_type": null
+        },
+        "country_version": {
+          "original_col_name": "Country/Version",
+          "computed_sql_type": "VARCHAR",
+          "key_type": null
+        }
+      },
+      "primary_key": [
+        "product_type",
+        "product_id",
+        "model_number"
+      ],
+      "foreign_keys": {
+        "product_type_parent": {
+          "ref_table": "product_type",
+          "ref_column": "product_type",
+          "nullable": true
+        }
+      }
+    },
+    "errors": [],
+    "column_order": [
+      "product_type",
+      "product_type_parent",
+      "product_id",
+      "model_number",
+      "description",
+      "wholesale_price",
+      "msrp",
+      "country_version"
+    ]
+  },
+  "product": {
+    "create": {
+      "columns": {
+        "serial_number": {
+          "original_col_name": "Serial Number",
+          "computed_sql_type": "VARCHAR",
+          "key_type": "PK"
+        },
+        "product_uid": {
+          "original_col_name": "Product UID",
+          "computed_sql_type": "TEXT",
+          "key_type": "PK"
+        },
+        "associated_pg_p_o_": {
+          "original_col_name": "Associated PG P.O.",
+          "computed_sql_type": "VARCHAR",
+          "key_type": null
+        },
+        "product_type": {
+          "original_col_name": "Product Type",
+          "computed_sql_type": "VARCHAR",
+          "key_type": "FK"
+        }
+      },
+      "primary_key": [
+        "serial_number",
+        "product_uid"
+      ],
+      "foreign_keys": {
+        "product_type": {
+          "ref_table": "product_type",
+          "ref_column": "product_type",
+          "nullable": false
+        }
+      }
+    },
+    "errors": [],
+    "column_order": [
+      "serial_number",
+      "product_uid",
+      "associated_pg_p_o_",
+      "product_type"
+    ]
+  },
+  "vendor_supplier": {
+    "create": {
+      "columns": {
+        "vs_name": {
+          "original_col_name": "VS Name",
+          "computed_sql_type": "VARCHAR",
+          "key_type": "PK"
+        },
+        "vsid": {
+          "original_col_name": "VSID",
+          "computed_sql_type": "VARCHAR",
+          "key_type": "PK"
+        },
+        "region": {
+          "original_col_name": "Region",
+          "computed_sql_type": "VARCHAR",
+          "key_type": "FK"
+        },
+        "address": {
+          "original_col_name": "Address",
+          "computed_sql_type": "TEXT",
+          "key_type": null
+        },
+        "contact_first_name": {
+          "original_col_name": "Contact - First Name",
+          "computed_sql_type": "VARCHAR",
+          "key_type": null
+        },
+        "contact_last_name": {
+          "original_col_name": "Contact - Last Name",
+          "computed_sql_type": "VARCHAR",
+          "key_type": null
+        },
+        "title": {
+          "original_col_name": "Title",
+          "computed_sql_type": "VARCHAR",
+          "key_type": null
+        },
+        "phone": {
+          "original_col_name": "Phone",
+          "computed_sql_type": "TEXT",
+          "key_type": null
+        },
+        "email": {
+          "original_col_name": "Email",
+          "computed_sql_type": "TEXT",
+          "key_type": null
+        },
+        "list_of_other_employees": {
+          "original_col_name": "List of other Employees",
+          "computed_sql_type": "TEXT",
+          "key_type": null
+        }
+      },
+      "primary_key": [
+        "vs_name",
+        "vsid"
+      ],
+      "foreign_keys": {
+        "region": {
+          "ref_table": "region",
+          "ref_column": "region",
+          "nullable": false
+        }
+      }
+    },
+    "errors": [],
+    "column_order": [
+      "vs_name",
+      "vsid",
+      "region",
+      "address",
+      "contact_first_name",
+      "contact_last_name",
+      "title",
+      "phone",
+      "email",
+      "list_of_other_employees"
+    ]
+  },
+  "consultant": {
+    "create": {
+      "columns": {
+        "consultant_id": {
+          "original_col_name": "Consultant_ID",
+          "computed_sql_type": "VARCHAR",
+          "key_type": "PK"
+        },
+        "first_name": {
+          "original_col_name": "First Name",
+          "computed_sql_type": "VARCHAR",
+          "key_type": null
+        },
+        "last_name": {
+          "original_col_name": "Last Name",
+          "computed_sql_type": "VARCHAR",
+          "key_type": null
+        },
+        "region": {
+          "original_col_name": "Region",
+          "computed_sql_type": "VARCHAR",
+          "key_type": null
+        },
+        "consultant_s_company": {
+          "original_col_name": "Consultant's Company",
+          "computed_sql_type": "VARCHAR",
+          "key_type": null
+        },
+        "address": {
+          "original_col_name": "Address",
+          "computed_sql_type": "TEXT",
+          "key_type": null
+        },
+        "phone_number": {
+          "original_col_name": "Phone Number",
+          "computed_sql_type": "VARCHAR",
+          "key_type": null
+        },
+        "email": {
+          "original_col_name": "Email",
+          "computed_sql_type": "VARCHAR",
+          "key_type": null
+        },
+        "list_of_subsidiary_consultants": {
+          "original_col_name": "List of Subsidiary Consultants",
+          "computed_sql_type": "VARCHAR",
+          "key_type": null
+        }
+      },
+      "primary_key": [
+        "consultant_id"
+      ],
+      "foreign_keys": {}
+    },
+    "errors": [],
+    "column_order": [
+      "consultant_id",
+      "first_name",
+      "last_name",
+      "region",
+      "consultant_s_company",
+      "address",
+      "phone_number",
+      "email",
+      "list_of_subsidiary_consultants"
+    ]
+  },
+  "sales_partner": {
+    "create": {
+      "columns": {
+        "firm_name": {
+          "original_col_name": "Firm Name",
+          "computed_sql_type": "VARCHAR",
+          "key_type": "PK"
+        },
+        "spid": {
+          "original_col_name": "SPID",
+          "computed_sql_type": "VARCHAR",
+          "key_type": "PK"
+        },
+        "region": {
+          "original_col_name": "Region",
+          "computed_sql_type": "VARCHAR",
+          "key_type": "FK"
+        },
+        "partner_level": {
+          "original_col_name": "Partner Level",
+          "computed_sql_type": "VARCHAR",
+          "key_type": "Enum:Level 1,Level 2,Level 3"
+        },
+        "type": {
+          "original_col_name": "Type",
+          "computed_sql_type": "VARCHAR",
+          "key_type": null
+        },
+        "exclusivity": {
+          "original_col_name": "Exclusivity",
+          "computed_sql_type": "VARCHAR",
+          "key_type": null
+        },
+        "address": {
+          "original_col_name": "Address",
+          "computed_sql_type": "VARCHAR",
+          "key_type": null
+        },
+        "contact_person_first_name": {
+          "original_col_name": "Contact Person - First Name",
+          "computed_sql_type": "VARCHAR",
+          "key_type": null
+        },
+        "contact_person_last_name": {
+          "original_col_name": "Contact Person - Last Name",
+          "computed_sql_type": "VARCHAR",
+          "key_type": null
+        },
+        "phone_number": {
+          "original_col_name": "Phone Number",
+          "computed_sql_type": "TEXT",
+          "key_type": null
+        },
+        "email_address": {
+          "original_col_name": "Email Address",
+          "computed_sql_type": "TEXT",
+          "key_type": null
+        }
+      },
+      "primary_key": [
+        "firm_name",
+        "spid"
+      ],
+      "foreign_keys": {
+        "region": {
+          "ref_table": "region",
+          "ref_column": "region",
+          "nullable": false
+        }
+      }
+    },
+    "errors": [],
+    "column_order": [
+      "firm_name",
+      "spid",
+      "region",
+      "partner_level",
+      "type",
+      "exclusivity",
+      "address",
+      "contact_person_first_name",
+      "contact_person_last_name",
+      "phone_number",
+      "email_address"
+    ]
+  },
+  "customer": {
+    "create": {
+      "columns": {
+        "customer_id": {
+          "original_col_name": "Customer_ID",
+          "computed_sql_type": "VARCHAR",
+          "key_type": "PK"
+        },
+        "customer_name": {
+          "original_col_name": "Customer Name",
+          "computed_sql_type": "VARCHAR",
+          "key_type": "PK"
+        },
+        "hq_address": {
+          "original_col_name": "HQ Address",
+          "computed_sql_type": "VARCHAR",
+          "key_type": null
+        },
+        "main_contact_type": {
+          "original_col_name": "Main Contact Type",
+          "computed_sql_type": "VARCHAR",
+          "key_type": null
+        },
+        "main_contact_name": {
+          "original_col_name": "Main Contact Name",
+          "computed_sql_type": "VARCHAR",
+          "key_type": null
+        },
+        "main_contact_phone_number": {
+          "original_col_name": "Main Contact Phone Number ",
+          "computed_sql_type": "VARCHAR",
+          "key_type": null
+        },
+        "main_contact_email": {
+          "original_col_name": "Main Contact Email ",
+          "computed_sql_type": "VARCHAR",
+          "key_type": null
+        },
+        "ap_contact_name": {
+          "original_col_name": "AP Contact Name",
+          "computed_sql_type": "TEXT",
+          "key_type": null
+        },
+        "ap_contact_phone": {
+          "original_col_name": "AP Contact Phone",
+          "computed_sql_type": "TEXT",
+          "key_type": null
+        },
+        "ap_contact_email": {
+          "original_col_name": "AP Contact Email ",
+          "computed_sql_type": "TEXT",
+          "key_type": null
+        }
+      },
+      "primary_key": [
+        "customer_id",
+        "customer_name"
+      ],
+      "foreign_keys": {}
+    },
+    "errors": [],
+    "column_order": [
+      "customer_id",
+      "customer_name",
+      "hq_address",
+      "main_contact_type",
+      "main_contact_name",
+      "main_contact_phone_number",
+      "main_contact_email",
+      "ap_contact_name",
+      "ap_contact_phone",
+      "ap_contact_email"
+    ]
+  },
+  "customer_site": {
+    "create": {
+      "columns": {
+        "customer_site_id": {
+          "original_col_name": "Customer_Site_ID",
+          "computed_sql_type": "VARCHAR",
+          "key_type": "PK"
+        },
+        "company_name": {
+          "original_col_name": "Company Name",
+          "computed_sql_type": "VARCHAR",
+          "key_type": null
+        },
+        "customer_id": {
+          "original_col_name": "Customer_ID",
+          "computed_sql_type": "VARCHAR",
+          "key_type": "FK"
+        },
+        "contact_name": {
+          "original_col_name": "Contact Name",
+          "computed_sql_type": "VARCHAR",
+          "key_type": null
+        },
+        "phone_number": {
+          "original_col_name": "Phone Number ",
+          "computed_sql_type": "VARCHAR",
+          "key_type": null
+        },
+        "email": {
+          "original_col_name": "Email ",
+          "computed_sql_type": "VARCHAR",
+          "key_type": null
+        },
+        "region": {
+          "original_col_name": "Region",
+          "computed_sql_type": "VARCHAR",
+          "key_type": null
+        },
+        "country": {
+          "original_col_name": "Country",
+          "computed_sql_type": "VARCHAR",
+          "key_type": null
+        },
+        "address": {
+          "original_col_name": "Address",
+          "computed_sql_type": "VARCHAR",
+          "key_type": null
+        },
+        "account_manager_employee_id_": {
+          "original_col_name": "Account Manager (Employee_ID)",
+          "computed_sql_type": "VARCHAR",
+          "key_type": null
+        },
+        "introducing_party": {
+          "original_col_name": "Introducing Party",
+          "computed_sql_type": "VARCHAR",
+          "key_type": null
+        },
+        "sales_person": {
+          "original_col_name": "Sales Person",
+          "computed_sql_type": "VARCHAR",
+          "key_type": null
+        }
+      },
+      "primary_key": [
+        "customer_site_id"
+      ],
+      "foreign_keys": {
+        "customer_id": {
+          "ref_table": "customer",
+          "ref_column": "customer_id",
+          "nullable": false
+        }
+      }
+    },
+    "errors": [],
+    "column_order": [
+      "customer_site_id",
+      "company_name",
+      "customer_id",
+      "contact_name",
+      "phone_number",
+      "email",
+      "region",
+      "country",
+      "address",
+      "account_manager_employee_id_",
+      "introducing_party",
+      "sales_person"
+    ]
+  },
+  "orders": {
+    "create": {
+      "columns": {
+        "purchase_order_number": {
+          "original_col_name": "Purchase Order Number",
+          "computed_sql_type": "INTEGER",
+          "key_type": "PK"
+        },
+        "estimate_number": {
+          "original_col_name": "Estimate Number ",
+          "computed_sql_type": "TEXT",
+          "key_type": null
+        },
+        "sales_order_number": {
+          "original_col_name": "Sales Order Number",
+          "computed_sql_type": "TEXT",
+          "key_type": null
+        },
+        "invoice_number": {
+          "original_col_name": "Invoice Number ",
+          "computed_sql_type": "VARCHAR",
+          "key_type": null
+        },
+        "customer_id": {
+          "original_col_name": "Customer_ID",
+          "computed_sql_type": "VARCHAR",
+          "key_type": "FK"
+        },
+        "customer_site_id": {
+          "original_col_name": "Customer_Site_ID",
+          "computed_sql_type": "VARCHAR",
+          "key_type": "FK"
+        },
+        "order_data_id": {
+          "original_col_name": "Order_Data_ID",
+          "computed_sql_type": "INTEGER",
+          "key_type": "PK"
+        },
+        "order_date": {
+          "original_col_name": "Order Date",
+          "computed_sql_type": "TEXT",
+          "key_type": null
+        },
+        "order_due_date": {
+          "original_col_name": "Order Due Date",
+          "computed_sql_type": "TEXT",
+          "key_type": null
+        },
+        "order_terms": {
+          "original_col_name": "Order Terms",
+          "computed_sql_type": "TEXT",
+          "key_type": null
+        }
+      },
+      "primary_key": [
+        "purchase_order_number",
+        "order_data_id"
+      ],
+      "foreign_keys": {
+        "customer_id": {
+          "ref_table": "customer",
+          "ref_column": "customer_id",
+          "nullable": false
+        },
+        "customer_site_id": {
+          "ref_table": "customer_site",
+          "ref_column": "customer_site_id",
+          "nullable": false
+        }
+      }
+    },
+    "errors": [],
+    "column_order": [
+      "purchase_order_number",
+      "estimate_number",
+      "sales_order_number",
+      "invoice_number",
+      "customer_id",
+      "customer_site_id",
+      "order_data_id",
+      "order_date",
+      "order_due_date",
+      "order_terms"
+    ]
+  },
+  "order_data": {
+    "create": {
+      "columns": {
+        "order_data_id": {
+          "original_col_name": "Order_Data_ID",
+          "computed_sql_type": "INTEGER",
+          "key_type": "FK"
+        },
+        "product_type": {
+          "original_col_name": "Product Type",
+          "computed_sql_type": "VARCHAR",
+          "key_type": null
+        },
+        "device_product_service_sn": {
+          "original_col_name": "Device/Product/Service SN",
+          "computed_sql_type": "VARCHAR",
+          "key_type": "PK"
+        },
+        "model_number": {
+          "original_col_name": "Model Number",
+          "computed_sql_type": "TEXT",
+          "key_type": null
+        },
+        "inventoried": {
+          "original_col_name": "Inventoried",
+          "computed_sql_type": "VARCHAR",
+          "key_type": null
+        },
+        "shipped": {
+          "original_col_name": "Shipped",
+          "computed_sql_type": "VARCHAR",
+          "key_type": null
+        },
+        "customer_received": {
+          "original_col_name": "Customer Received",
+          "computed_sql_type": "VARCHAR",
+          "key_type": null
+        },
+        "installed_date": {
+          "original_col_name": "Installed Date",
+          "computed_sql_type": "VARCHAR",
+          "key_type": null
+        }
+      },
+      "primary_key": [
+        "device_product_service_sn"
+      ],
+      "foreign_keys": {
+        "order_data_id": {
+          "ref_table": "orders",
+          "ref_column": "order_data_id",
+          "nullable": false
+        }
+      }
+    },
+    "errors": [],
+    "column_order": [
+      "order_data_id",
+      "product_type",
+      "device_product_service_sn",
+      "model_number",
+      "inventoried",
+      "shipped",
+      "customer_received",
+      "installed_date"
+    ]
+  },
+  "prospect": {
+    "create": {
+      "columns": {
+        "prospect_id": {
+          "original_col_name": "PROSPECT_ID",
+          "computed_sql_type": "VARCHAR",
+          "key_type": "PK"
+        },
+        "company": {
+          "original_col_name": "COMPANY",
+          "computed_sql_type": "VARCHAR",
+          "key_type": null
+        },
+        "category": {
+          "original_col_name": "CATEGORY",
+          "computed_sql_type": "VARCHAR",
+          "key_type": null
+        },
+        "region": {
+          "original_col_name": "REGION",
+          "computed_sql_type": "VARCHAR",
+          "key_type": "FK"
+        },
+        "introductory_partner": {
+          "original_col_name": "INTRODUCTORY PARTNER",
+          "computed_sql_type": "VARCHAR",
+          "key_type": null
+        },
+        "introductory_partner_email": {
+          "original_col_name": "INTRODUCTORY PARTNER EMAIL ",
+          "computed_sql_type": "VARCHAR",
+          "key_type": null
+        },
+        "company_name": {
+          "original_col_name": "COMPANY NAME",
+          "computed_sql_type": "VARCHAR",
+          "key_type": "FK"
+        },
+        "prospect_contact_name": {
+          "original_col_name": "PROSPECT CONTACT NAME ",
+          "computed_sql_type": "VARCHAR",
+          "key_type": null
+        },
+        "industry": {
+          "original_col_name": "INDUSTRY",
+          "computed_sql_type": "VARCHAR",
+          "key_type": null
+        },
+        "potential_of_buildings_": {
+          "original_col_name": "POTENTIAL (# of Buildings)",
+          "computed_sql_type": "INTEGER",
+          "key_type": null
+        },
+        "last_contact": {
+          "original_col_name": "LAST CONTACT",
+          "computed_sql_type": "VARCHAR",
+          "key_type": null
+        },
+        "sales_status": {
+          "original_col_name": "SALES STATUS",
+          "computed_sql_type": "VARCHAR",
+          "key_type": null
+        },
+        "priority": {
+          "original_col_name": "PRIORITY",
+          "computed_sql_type": "INTEGER",
+          "key_type": null
+        },
+        "notes": {
+          "original_col_name": "NOTES",
+          "computed_sql_type": "VARCHAR",
+          "key_type": null
+        },
+        "potential_deal_size": {
+          "original_col_name": "POTENTIAL DEAL SIZE",
+          "computed_sql_type": "INTEGER",
+          "key_type": null
+        }
+      },
+      "primary_key": [
+        "prospect_id"
+      ],
+      "foreign_keys": {
+        "region": {
+          "ref_table": "region",
+          "ref_column": "region",
+          "nullable": false
+        },
+        "company_name": {
+          "ref_table": "corporation",
+          "ref_column": "company_name",
+          "nullable": false
+        }
+      }
+    },
+    "errors": [],
+    "column_order": [
+      "prospect_id",
+      "company",
+      "category",
+      "region",
+      "introductory_partner",
+      "introductory_partner_email",
+      "company_name",
+      "prospect_contact_name",
+      "industry",
+      "potential_of_buildings_",
+      "last_contact",
+      "sales_status",
+      "priority",
+      "notes",
+      "potential_deal_size"
+    ]
+  }
+}
