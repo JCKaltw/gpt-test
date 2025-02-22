@@ -5,7 +5,9 @@ import sys
 import os
 
 import jsonschema
-from jsonschema import Draft7Validator, RefResolver, exceptions as jsonschema_exceptions
+from jsonschema import Draft7Validator, exceptions as jsonschema_exceptions
+from referencing import Registry, Resource
+from referencing.jsonschema import DRAFT7
 
 def main():
     # Parse command-line arguments
@@ -37,28 +39,28 @@ def main():
             print(f"Failed to load JSON file: {e}")
         sys.exit(1)
 
-    # Create a store to map URIs to schema content
-    store = {}
+    # Create a registry to store referenced schemas
+    registry = Registry()
 
-    # Load the referenced schema (ddl-ast-schema.json) and add it to the store
+    # Load the referenced schema (ddl-ast-schema.json) and add it to the registry
     ddl_schema_path = os.path.join(os.path.dirname(args.json_schema_file), "ddl-ast-schema.json")
     try:
         with open(ddl_schema_path, "r") as ddl_f:
             ddl_schema = json.load(ddl_f)
-            # Map the $id of the referenced schema to its content
-            store["https://pgpro.plasmaguardllc.com/ddl-ast-schema.json"] = ddl_schema
+            # Add the referenced schema to the registry using its $id
+            registry = registry.with_resource(
+                uri="https://pgpro.plasmaguardllc.com/ddl-ast-schema.json",
+                resource=Resource.from_contents(ddl_schema, default_specification=DRAFT7),
+            )
     except Exception as e:
         print("ERROR")
         if args.verbose:
             print(f"Failed to load referenced schema: {e}")
         sys.exit(1)
 
-    # Create a resolver with the custom store
-    resolver = RefResolver.from_schema(schema, store=store)
-
-    # Validate using a Draft7Validator with the custom resolver
+    # Validate using a Draft7Validator with the custom registry
     try:
-        validator = Draft7Validator(schema, resolver=resolver)
+        validator = Draft7Validator(schema, registry=registry)
         validator.validate(data)
     except jsonschema_exceptions.ValidationError as e:
         print("ERROR")
